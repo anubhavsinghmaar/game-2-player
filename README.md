@@ -1,37 +1,48 @@
 # Just Us Arcade
 
-A private arcade for two. Browse 69 offerings across eight worlds, with 54 playable games and quiz categories. The same room supports ready checks, sealed answers, board games, quizzes, shared drawing, split-clue puzzles, and rematches.
+A mobile-first arcade for two. Play on separate phones or pass one device back and forth. There are **54 playable games and quiz categories** across eight worlds, plus 15 entries marked Coming Soon.
 
-[Phone home screen](docs/phone-home.png) · [Phone gameplay](docs/phone-game.png)
+<p>
+  <img src="docs/phone-home.png" alt="The arcade home screen on a phone" width="240">
+  <img src="docs/phone-game.png" alt="Both choices revealed in This or That on a phone" width="240">
+</p>
+
+## What you can play
+
+- **Quick games** such as This or That, Connect Four, and Memory Match.
+- **Creative and cooperative games** such as Draw & Guess, Paint Together, and Escape Together.
+- **Trivia and daily puzzles** including Bollywood, Science & Space, and the Daily Word Puzzle.
+
+Use the same room for rematches, or use **Game Night Shuffle** to pick what to play next. After Dark games open when both players opt in. [See the full game roster](GAME_STATUS.md).
+
+## Play on two devices
+
+1. Open the deployed HTTPS site, select **Create our room**, and send the invitation link to your partner.
+2. Your partner opens the link, picks a nickname, and sends you the generated reply code.
+3. Paste the reply code and tap **Connect room**. Pick a game, tap **I’m ready** on both devices, and have the host start.
+
+Share invitations and replies privately. The connection is encrypted over WebRTC and uses Cloudflare’s public STUN endpoint for network discovery. If pairing stalls, try another Wi-Fi or mobile data connection.
+
+Keep both tabs open during play. Refreshing or closing a tab ends the connection and requires a new invitation. Favorites and preferences stay in each browser. Room progress and answers are temporary.
 
 ## Run locally
 
-Use Node 22.18 or newer.
+From the project folder, use Node.js 22.18 or later.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Open the printed URL. Choose **Explore demo** for two seats on one device. The demo is labeled **Local Demo** and uses **Switch seat** to hand off the screen.
+Open the URL printed in Terminal. Choose **Explore demo** to play on one device and **Switch seat** to hand it to the other player.
 
-## Play on two devices
+## Deploy to Netlify
 
-1. Open the HTTPS site and select **Create our room**. Pick a nickname and copy the invitation link into your private chat.
-2. Your partner opens the link, picks a nickname, and sends the generated reply code back to you.
-3. Paste their code into **Connect room**. Choose a game, tap ready on both devices, and start from the host's seat.
+Import the GitHub repository into Netlify. The included configuration runs `npm run build` and publishes `dist/`. Leave environment variables empty. The app uses static hosting and requires zero API keys, databases, or player accounts.
 
-The site runs on static Netlify hosting with zero API keys, environment variables, or accounts for players. It uses an encrypted WebRTC data channel and Cloudflare's public STUN endpoint for network discovery. The invite and reply carry connection details and should be shared privately. Direct connections work only when both networks permit a route. Try another Wi-Fi or mobile data connection if pairing fails.
+For a manual deployment, run `npm ci` and `npm run build`, then upload the resulting `dist/` folder. [Netlify setup guide](NETLIFY_DEPLOY.md).
 
-The room lives in the open tabs. Closing or refreshing one ends the connection and requires a new invitation. Short network interruptions may recover while both tabs remain open. Browser preferences and favorites are kept locally. Game content and answers live in memory, and there is no persistent vault.
-
-## Deploy and verify
-
-- [Netlify setup](NETLIFY_DEPLOY.md)
-- [Full game roster](GAME_STATUS.md)
-- [Tests and coverage](TEST_REPORT.md)
-- [Content editing](CONTENT_GUIDELINES.md)
-- [Image credits](ASSET_CREDITS.md)
+## Check the project
 
 ```sh
 npm run lint
@@ -41,4 +52,6 @@ npm run content-validation
 npm run build
 ```
 
-The Vite build produces static HTML, CSS, JavaScript, and assets in `dist/`.
+The Playwright tests cover the phone layout, direct pairing, and shared gameplay in two separate browser sessions. [Test report and browser test commands](TEST_REPORT.md).
+
+[Content editing guide](CONTENT_GUIDELINES.md) · [Asset credits](ASSET_CREDITS.md)
