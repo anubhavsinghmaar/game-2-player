@@ -53,7 +53,7 @@ for (const [id, items] of Object.entries(puzzles)) {
   }
 }
 if (truthCards.length !== 3 || truthCards.some((level) => level.length !== 4 || level.some((pair) => pair.length !== 2))) problems.push('Truth or Dare must have four truth/dare pairs at each of the three levels.');
-if (games.length !== 69 || new Set(games.map((game) => game.id)).size !== 69) problems.push('Catalog must contain 69 distinct IDs.');
+if (games.length !== 70 || new Set(games.map((game) => game.id)).size !== 70) problems.push('Catalog must contain 70 distinct IDs.');
 if (problems.length) {
   process.stderr.write(problems.join('\n') + '\n');
   process.exitCode = 1;

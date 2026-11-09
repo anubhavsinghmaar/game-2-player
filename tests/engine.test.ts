@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { applyAction, choicePrompt, question, validAnswer } from '../src/games/engine.ts';
-import { boardMove, newBoard, reversiCaptures } from '../src/games/boards.ts';
+import { boardMove, checkersTargets, newBoard, reversiCaptures } from '../src/games/boards.ts';
 import { games, playable } from '../src/games/registry.ts';
 import { initialState } from '../src/room/model.ts';
 import type { QuizMode, RoomState, Seat } from '../src/room/model.ts';
@@ -20,8 +20,8 @@ function started(game: string, mode: QuizMode = 'quick', base = initialState()) 
 }
 
 test('the full catalog is represented and every playable entry can enter a game', () => {
-  assert.equal(games.length, 69);
-  assert.equal(new Set(games.map((game) => game.id)).size, 69);
+  assert.equal(games.length, 70);
+  assert.equal(new Set(games.map((game) => game.id)).size, 70);
   const base = initialState();
   base.consent = { a: 3, b: 2 };
   for (const game of playable) assert.equal(started(game.id, 'quick', base).session?.game, game.id);
@@ -140,4 +140,72 @@ test('same-device adapter hides another seat’s answer and rejects stale revisi
   await client.lock(s, '1');
   assert.equal((await client.answers(s)).a?.value, '0');
   stop();
+});
+
+test('checkers selects, moves, forces captures and crowns kings', () => {
+  let board = newBoard('checkers');
+  assert.equal([...board].filter((p) => p === 'a').length, 12);
+  assert.equal([...board].filter((p) => p === 'b').length, 12);
+  assert.equal(boardMove('checkers', board, 'a', 0, '.'), undefined);
+  const select = boardMove('checkers', board, 'a', 40, '.')!;
+  assert.equal(select.claims, 's40');
+  assert.equal(select.turn, 'a');
+  const moved = boardMove('checkers', board, 'a', 33, 's40')!;
+  assert.equal(moved.board[33], 'a');
+  assert.equal(moved.board[40], '.');
+  assert.equal(moved.turn, 'b');
+  // Hand-built capture: a at 27 can jump b at 18 into 9 (empty), which is mandatory.
+  board = '.'.repeat(64).split('').map((_, i) => i === 27 ? 'a' : i === 18 ? 'b' : i === 44 ? 'b' : '.').join('');
+  assert.deepEqual(checkersTargets(board, 27, 'a').map((t) => t.to), [9]);
+  const jump = boardMove('checkers', board, 'a', 9, 's27')!;
+  assert.equal(jump.board[18], '.');
+  assert.equal(jump.a, 11);
+  // Crowning on the back row.
+  board = '.'.repeat(64).split('').map((_, i) => i === 10 ? 'a' : i === 62 ? 'b' : '.').join('');
+  const crown = boardMove('checkers', board, 'a', 1, 's10')!;
+  assert.equal(crown.board[1], 'A');
+});
+
+test('checkers multi-jump keeps the turn and a wipe-out ends the game', () => {
+  const board = '.'.repeat(64).split('').map((_, i) => i === 45 ? 'a' : i === 36 ? 'b' : i === 20 ? 'b' : '.').join('');
+  const first = boardMove('checkers', board, 'a', 27, 's45')!;
+  assert.equal(first.turn, 'a');
+  assert.equal(first.claims, 'f27');
+  assert.equal(boardMove('checkers', first.board, 'a', 45, 'f27'), undefined);
+  const second = boardMove('checkers', first.board, 'a', 13, first.claims!)!;
+  assert.equal(second.done, true);
+  assert.ok(second.a > second.b);
+});
+
+test('five in a row needs five stones', () => {
+  let board = newBoard('five-row');
+  assert.equal(board.length, 100);
+  let move;
+  for (let i = 0; i < 5; i++) {
+    move = boardMove('five-row', board, 'a', 20 + i, '')!;
+    board = move.board;
+    if (i < 4) { assert.equal(move.done, false); board = boardMove('five-row', board, 'b', 70 + i, '')!.board; }
+  }
+  assert.equal(move!.done, true);
+  assert.equal(move!.a, 1);
+});
+
+test('higher or lower scores correct calls and ends after ten cards', () => {
+  const board = newBoard('higher-lower', 99);
+  assert.equal(board.length, 11);
+  for (let i = 0; i < board.length - 1; i++) assert.notEqual(board[i], board[i + 1]);
+  let claims = '.';
+  let turn: Seat = 'a';
+  let last;
+  for (let i = 0; i < 10; i++) {
+    const higher = '23456789TJQKA'.indexOf(board[i + 1]) > '23456789TJQKA'.indexOf(board[i]);
+    const value: number = turn === 'a' ? (higher ? 1 : 0) : (higher ? 0 : 1);
+    last = boardMove('higher-lower', board, turn, value, claims)!;
+    claims = last.claims!;
+    turn = last.turn;
+  }
+  assert.equal(last!.done, true);
+  assert.equal(last!.a, 5);
+  assert.equal(last!.b, 0);
+  assert.equal(boardMove('higher-lower', board, turn, 1, claims), undefined);
 });

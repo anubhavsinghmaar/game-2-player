@@ -1,6 +1,6 @@
 # Game status
 
-54 playable offerings and 15 Coming Soon across eight worlds. Quiz categories share one quiz engine with separate packs. Playable entries use the same local and direct room game engines.
+57 playable offerings and 13 Coming Soon across eight worlds. Quiz categories share one quiz engine with separate packs. Playable entries use the same local and direct room game engines.
 
 ## Love Lounge
 
@@ -72,8 +72,9 @@
 | Memory Match | Playable |
 | Rock Paper Scissors+ | Playable |
 | Reaction Duel | Coming Soon |
-| Higher or Lower | Coming Soon |
-| Checkers | Coming Soon |
+| Higher or Lower | Playable |
+| Checkers | Playable |
+| Five in a Row | Playable |
 | Pong Duel | Coming Soon |
 
 ## Mystery Missions

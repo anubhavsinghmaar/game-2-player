@@ -1,6 +1,6 @@
 # Just Us Arcade
 
-A mobile-first arcade for two. Play on separate phones or pass one device back and forth. There are **54 playable games and quiz categories** across eight worlds, plus 15 entries marked Coming Soon.
+A mobile-first arcade for two. Play on separate phones or pass one device back and forth. There are **57 playable games and quiz categories** across eight worlds, plus 13 entries marked Coming Soon.
 
 <p>
   <img src="docs/phone-home.png" alt="The arcade home screen on a phone" width="240">
@@ -9,7 +9,7 @@ A mobile-first arcade for two. Play on separate phones or pass one device back a
 
 ## What you can play
 
-- **Quick games** such as This or That, Connect Four, and Memory Match.
+- **Quick games** such as This or That, Connect Four, Checkers, Five in a Row, Higher or Lower, and Memory Match.
 - **Creative and cooperative games** such as Draw & Guess, Paint Together, and Escape Together.
 - **Trivia and daily puzzles** including Bollywood, Science & Space, and the Daily Word Puzzle.
 

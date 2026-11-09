@@ -78,7 +78,7 @@ function newSession(state: RoomState, id: string, random: number, now: number): 
   return timed({
     id, game: game.id, seed, mode: state.mode, difficulty: state.difficulty, intensity, phase: 'playing',
     round: 0, total: totals[game.engine], turn: 'a', deadline: 0, score: { a: 0, b: 0 },
-    board: game.engine === 'board' ? newBoard(game.id) : '', claims: '.........', found: 0, first: -1, second: -1,
+    board: game.engine === 'board' ? newBoard(game.id, seed) : '', claims: game.id === 'checkers' || game.id === 'higher-lower' ? '.' : '.........', found: 0, first: -1, second: -1,
     hint: 0, misses: 0, text: '', marks: 0, proposed: -1, chooser: 'a', pick: -1, detail: '',
   }, now);
 }

@@ -16,7 +16,7 @@ export const sessionSchema = z.object({
   mode: z.enum(modes), difficulty: z.enum(difficulties), intensity: z.number().int().min(0).max(3),
   phase: z.enum(['playing', 'reveal', 'result']), round: smallInt, total: smallInt,
   turn: seatSchema, deadline: timestamp, score: numberPair,
-  board: z.string().max(64), claims: z.string().max(9),
+  board: z.string().max(100), claims: z.string().max(12),
   found: z.number().int().min(0).max(4095), first: z.number().int().min(-1).max(11), second: z.number().int().min(-1).max(11),
   hint: smallInt, misses: smallInt, text: z.string().max(1800),
   marks: z.number().int().min(0).max(511), proposed: z.number().int().min(-1).max(8),
